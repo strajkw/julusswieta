@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Dla Juluś 💙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 { margin-bottom: 8px; }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        #message {
+            font-size: 18px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            white-space: pre-line;
+            transition: opacity 0.4s ease;
+        }
+
+        #message.fade { opacity: 0; }
+
+        button {
+            margin-top: 25px;
+            background: #66a6ff;
+            color: white;
+            border: none;
+            padding: 14px 26px;
+            font-size: 16px;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        /* LATAJĄCE SERDUSZKA */
+        .heart {
+            position: fixed;
+            bottom: -20px;
+            font-size: 18px;
+            color: rgba(255, 105, 180, 0.35);
+            animation: floatUp linear forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            from { transform: translateY(0); opacity: 0.8; }
+            to   { transform: translateY(-110vh); opacity: 0; }
+        }
+
+        /* SERDUSZKO */
+        .secret-heart {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            font-size: 26px;
+            cursor: pointer;
+            z-index: 3;
+            opacity: 0.8;
+        }
+
+        /* GALERIA */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .overlay.show { display: flex; }
+
+        .gallery {
+            max-width: 90%;
+            max-height: 90%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .gallery img {
+            width: 100%;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        /* POWIĘKSZENIE */
+        .viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .viewer.show { display: flex; }
+
+        .viewer img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>💙 Dla Ciebie</h1>
+    <div class="subtitle">Kliknij, kiedy potrzebujesz wsparcia</div>
+
+    <div id="message">
+        Jesteś dla mnie niesamowicie ważna
+    </div>
+
+    <button onclick="losuj()">Pokaż wiadomość</button>
+</div>
+
+<div class="secret-heart" onclick="toggleGallery()">❤️</div>
+
+<!-- GALERIA -->
+<div class="overlay" id="overlay" onclick="toggleGallery()">
+    <div class="gallery" onclick="event.stopPropagation()">
+        <img src="rysunki/1.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/2.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/3.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/4.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/5.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/6.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/7.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/8.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/9.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/10.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/11.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/12.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/13.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/14.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/15.jpg" onclick="openImage(this.src)">
+        <img src="rysunki/16.jpg" onclick="openImage(this.src)">
+    </div>
+</div>
+
+<div class="viewer" id="viewer" onclick="closeImage()">
+    <img id="viewerImg">
+</div>
+
+<script>
+    const teksty = [
+        "Zawsze możesz na mnie liczyć",
+        "Ze wszystkim sobie na pewno poradzisz",
+        "Jestem z Ciebie bardzo dumny...",
+        "Wszystko się ułoży",
+        "Jesteś niesamowicie dzielna",
+        "Będę przy Tobie",
+        "Twoje emocje są ważne",
+        "Zawsze będę Ci kibicować",
+        "Jesteś wystarczająca",
+        "Uśmiechnij się...",
+        "Jesteś najpiękniejsza na świecie",
+        "Nie martw się",
+        "Pięknie wyglądasz, guci...",
+        "Jesteś bardzo uzdolniona",
+        "Pamiętaj, pracusiu, o odpoczynku!",
+        "Dbaj o siebie, proszę...",
+        "Jesteś bardzo wartościowa",
+        "Uwielbiam Cię taką, jaka jesteś",
+        "Będziesz niesamowitą mamą",
+        "Każdy, kto ma Cię w życiu, jest niesamowitym szczęściarzem",
+        "Uwierz w siebie...",
+        "Masz piękny uśmiech (teraz się uśmiechasz)",
+        "Doceniaj to, co masz, głupolku",
+        "Rób to, co daje Ci szczęście",
+        "Bądź dla siebie najważniejsza",
+        "Jesteś turbosłodziakiem",
+        "Masz dobre serduszko",
+        "Jesteś niesamowicie dobrą osobą",
+        "Wszyscy są z Ciebie dumni, nawet gdy tego nie widać",
+        "Z każdym problemem świetnie sobie poradzisz",
+        "Uważaj na siebie",
+        "Ciesz się z małych rzeczy <3",
+        "Nie przejmuj się na zapas",
+        "Nie złość się, bo wtedy jeszcze piękniej wyglądasz",
+        "Bądź szczęśliwa, nawet gdy o to ciężko",
+        "Bardzo motywujesz innych, by być lepszymi...",
+        "Masz niesamowite ambicje, które potrafisz spełnić",
+        "Jesteś idealna, taka jaka jesteś",
+        "Wszystko, czego chcesz, osiągniesz"
+    ];
+
+    const sekretnaWiadomosc = `
+Hej Juluś,
+
+chciałbym ci powiedzieć, że jestem z Ciebie niesamowicie dumny.
+Wiem jak wiele przeszłaś, a mimo to jak pięknie sobie ze wszystkim radzisz.
+
+Nigdy nie sądziłem, że generalnie kogoś pokocham tak mocno,
+jak pokochałem Ciebie.
+
+Jesteś dla mnie niesamowicie wartościową osobą.
+Bardzo dużo dzięki Tobie się u mnie zmieniło
+i wiele razy pokazywałaś, że można wiele osiągnąć,
+jeżeli się tego tylko chce.
+
+Masz w sobie naprawdę wiele dobra.
+Masz cudowne serduszko,
+tak samo jak cudowną osobą jesteś.
+
+Uwierz mi, głuptasku uroczy,
+że wszystko Ci się w życiu ułoży
+i sama piszesz swoje życie,
+a nie ktoś za Ciebie.
+
+Jesteś niesamowicie mądra i dzielna,
+więc wiem, że nawet w najgorszych chwilach
+znajdziesz jakieś wyjście.
+
+Ale pamiętaj,
+że zawsze możesz na mnie liczyć.
+Z każdym problemem jaki jest,
+postaram się Ci pomóc.
+
+Bo jesteś dla mnie niesamowicie ważna.
+`;
+
+    let pula = [...teksty];
+    let sekretPokazany = false;
+
+    function tasuj() {
+        for (let i = pula.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pula[i], pula[j]] = [pula[j], pula[i]];
+        }
+    }
+
+    tasuj();
+
+    function losuj() {
+        const msg = document.getElementById("message");
+        msg.classList.add("fade");
+
+        setTimeout(() => {
+            if (pula.length === 0 && !sekretPokazany) {
+                msg.textContent = sekretnaWiadomosc;
+                sekretPokazany = true;
+                pula = [...teksty];
+                tasuj();
+            } else {
+                msg.textContent = pula.pop();
+            }
+            msg.classList.remove("fade");
+        }, 300);
+    }
+
+    function createHeart() {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = "💙";
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.animationDuration = 6 + Math.random() * 4 + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 10000);
+    }
+    setInterval(createHeart, 700);
+
+    function toggleGallery() {
+        document.getElementById("overlay").classList.toggle("show");
+    }
+
+    function openImage(src) {
+        document.getElementById("viewerImg").src = src;
+        document.getElementById("viewer").classList.add("show");
+    }
+
+    function closeImage() {
+        document.getElementById("viewer").classList.remove("show");
+    }
+</script>
+
+</body>
+</html>
